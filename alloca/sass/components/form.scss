@@ -1,0 +1,55 @@
+.button, .input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: var(--brand-color, #09c);
+    background-color: #fff;
+    border: 0;
+    outline: 0;
+    border-radius: 5px;
+    text-align: left;
+    position: relative;
+    text-decoration: none;
+    &.button {
+        padding: 20px;
+        margin: 7px 0;
+    }
+    input {
+        visibility: hidden;
+        height: 1px;
+        width: 1px;
+        margin: 0 !important;
+    }
+    svg {
+        margin-right: 16px;
+        flex-shrink: 0;
+    }
+    &:disabled {
+        opacity: .5;
+    }
+}
+
+textarea, input {
+    border: 2px solid #e0e0e0;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background: #fff;
+    width: 100%;
+    resize: none;
+    padding: 10px;
+    outline: 0;
+    margin-bottom: 15px;
+}
+
+textarea {
+    height: 167px;
+    margin: 6px 0 17px;
+}
+
+::placeholder {
+    color: #c1c1c1;
+}
+
+.grey {
+    color: #c1c1c1;
+}

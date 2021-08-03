@@ -1,0 +1,39 @@
+@import '../assets/normalize.scss';
+@import '../components/header.scss';
+@import '../components/tree.scss';
+
+body {
+    background-color: var(--brand-color, #09c);
+    color: var(--text-color, #fff);
+}
+
+html, body, input, textarea {
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+.container {
+    padding: 7px 10px;
+}
+
+svg {
+    .line {
+        fill: var(--brand-color, #09c);
+    }
+}
+
+a {
+    color: var(--text-color, #fff);
+}
+
+.f14 {
+    font-size: 14px;
+}
+
+.text-center {
+    text-align: center;
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{-this.lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="192x192" href="/app.png"/>
+    <link rel="manifest" href="/manifest.json"/>
+    <meta name="theme-color" content="#1f2227"/>
+    <title>{{ if this.pageTitle : }}{{=this.pageTitle}}{{ else : }}{{=this.config.pageTitle}}{{ end }}</title>
+    <style>{{-this.critical}}</style>
+    {{ if this.landing && this.query : }}
+    <link rel="canonical" href="https://{{-this.config.domain}}{{-this.url.split('?').shift()}}">
+    {{ end }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"> 
+    <script>function loadCSS(a,b,c,d){"use strict";var e=window.document.createElement("link"),f=b||window.document.getElementsByTagName("script")[0],g=window.document.styleSheets;return e.rel="stylesheet",e.href=a,e.media="only x",d&&(e.onload=d),f.parentNode.insertBefore(e,f),e.onloadcssdefined=function(b){for(var c,d=0;d<g.length;d++)g[d].href&&g[d].href.indexOf(a)>-1&&(c=!0);c?b():setTimeout(function(){e.onloadcssdefined(b)})},e.onloadcssdefined(function(){e.media=c||"all"}),e}function loadJS(a,b){var c,d,e;d=!1,c=document.createElement("script"),c.defer="true",c.type="text/javascript",c.src=a,c.onload=c.onreadystatechange=function(){d||this.readyState&&"complete"!=this.readyState||(d=!0,b&&b())},e=document.getElementsByTagName("script")[0],e.parentNode.insertBefore(c,e)}</script>
+    <script>loadCSS("{{-this.load('main/style.css')}}");loadJS("{{-this.load('main.js')}}");</script>
+</head>
+<body>
+    <script>var app={{-JSON.stringify(this.app)}}</script>
+    <header>
+        <img src="/i/logo.svg" height="43" width="193" />
+    </header>
+    <main>
+        {{ content }}
+    </main>
+</body>
+</html>

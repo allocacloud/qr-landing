@@ -1,0 +1,8 @@
+node_modules
+config.js
+package-lock.json
+static/sw.js
+static/js
+static/styles
+scripts/build
+template.js

@@ -105,22 +105,6 @@
       - deploy
       - balancer
 
-  - name: "sets_balancer : Enable config"
-    file:
-      src: "../sites-available/100-{{ project_hostname }}.conf"
-      dest: "{{ nginx_home }}/sites-enabled/100-{{ project_hostname }}.conf"
-      state: link
-      follow: no
-    tags:
-      - deploy
-      - balancer
-
-  - name: restart nginx
-    include: include/restart_nginx.yml
-    tags:
-      - deploy
-      - balancer
-
   - name: domain name debug
     debug:
       msg: "domain name is - https://{{ project_hostname }}"

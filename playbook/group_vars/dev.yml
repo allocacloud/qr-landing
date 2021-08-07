@@ -7,7 +7,7 @@ project_hostname: "{{ project_name }}-{{ namespace }}.alloca.cloud"
 ### redis
 
 project_redis_master_address: "{{ project_host }}"
-project_redis_master_port: 16379
+project_redis_master_port: "16379"
 
 ### api
 

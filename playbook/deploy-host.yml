@@ -34,7 +34,7 @@
       state: absent
       path: "{{ item_path }}"
     loop:
-    - "{{ nginx_home }}/conf.d/70-{{ project_hostname }}.conf"
+    - "{{ nginx_home }}/conf.d/100-{{ project_hostname }}.conf"
     loop_control:
       loop_var: item_path
     tags:

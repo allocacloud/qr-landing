@@ -11,6 +11,7 @@ project_redis_master_port: 16379
 
 ### api
 
+project_api_port: 18080
 project_api_env:
   NODE_ENV: production
   APPPORT: "{{ project_api_expose|string }}"

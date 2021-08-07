@@ -123,7 +123,7 @@
 
   - name: domain name debug
     debug:
-      msg: "domain name is - http://{{ project_hostname }}"
+      msg: "domain name is - https://{{ project_hostname }}"
     tags:
       - deploy
       - balancer

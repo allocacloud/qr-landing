@@ -23,7 +23,7 @@ pipeline {
     environment {
         ANSIBLE_HOST_KEY_CHECKING = 'False'
         REG_HOSTNAME = 'registry.alloca.cloud'
-        REG_USERNAME = 'qr-landing'
+        REG_USERNAME = 'oms'
         PROJECT_NAME = "${projectName}"
         PROJECT_WORKDIR = "${projectWorkdir}"
         PROJECT_API_CONTAINER = "${projectAPIContainer}"

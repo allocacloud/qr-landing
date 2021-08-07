@@ -1,7 +1,5 @@
 FROM keymetrics/pm2:14-alpine AS build
 
-ARG APPTEMPLATE="default"
-
 WORKDIR /build
 
 COPY package.json /build/package.json

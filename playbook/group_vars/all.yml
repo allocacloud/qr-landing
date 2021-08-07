@@ -1,0 +1,27 @@
+---
+### common
+
+project_name: qr-landing
+project_host: "{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}"
+registry_hostname: registry.alloca.cloud
+registry_username: oms
+registry_password: NzFlMDYwODIxNGNiYmVkZjYxYzUxMDhm
+nginx_home: /etc/nginx
+nginx_service: native
+
+### redis
+
+project_redis_image: redis:5.0.10-alpine
+project_redis_migration: no
+
+### api
+
+project_api_tag: "{{ project_tag }}"
+project_api_container: alloca/qr-landing
+project_api_image: "{{ registry_hostname }}/{{ project_api_container }}:{{ project_api_tag }}"
+project_api_ping: /uk/company/1
+project_api_expose: 8080
+project_api_user: root
+project_api_group: root
+project_api_volumes:
+- "/var/www/qr-landing-static-{{ project_tag }}:/app/host-static:rw"

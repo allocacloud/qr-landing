@@ -1,0 +1,62 @@
+upstream backend_{{ project_name }}-{{ namespace }} {
+    server {{ project_host }}:{{ project_api_port }};
+}
+
+server {
+    listen 443 ssl;
+
+    ssl_certificate /etc/letsencrypt/live/alloca.cloud/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/alloca.cloud/privkey.pem;
+    ssl_prefer_server_ciphers on;
+    ssl_protocols TLSv1 SSLv3 TLSv1.1 TLSv1.2;
+    ssl_ciphers kEECDH+AES128:kEECDH:kEDH:-3DES:kRSA+AES128:kEDH+3DES:DES-CBC3-SHA:!RC4:!aNULL:!eNULL:!MD5:!EXPORT:!LOW:!SEED:!CAMELLIA:!IDEA:!PSK:!SRP:!SSLv2;
+    ssl_session_cache    shared:SSL:64m;
+    ssl_session_timeout  28h;
+
+    server_name {{ project_hostname }};
+
+    access_log /var/log/nginx/{{ project_hostname }}-access.log;
+    error_log /var/log/nginx/{{ project_hostname }}-error.log;
+
+    error_page  405     =200 $uri;
+
+    ### compression
+    gzip on;
+    gzip_comp_level 2;
+    gzip_http_version 1.0;
+    gzip_proxied any;
+    gzip_min_length 1100;
+    gzip_buffers 16 8k;
+    gzip_types text/plain text/css application/x-javascript application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
+    gzip_disable "MSIE [1-6].(?!.*SV1)";
+    gzip_vary on;
+
+    root /var/www/qr-landing-static-{{ project_tag }}/;
+
+    location / {
+        try_files $uri @backend;
+    }
+
+    location @backend {
+        add_header Last-Modified "";
+        proxy_pass http://backend_{{ project_name }}-{{ namespace }};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location = /robots.txt {
+        add_header  Content-Type  text/plain;
+        return 200 "User-agent: *\nDisallow: /\n";
+    }
+}
+
+server {
+    listen 80;
+    server_name {{ project_hostname }};
+    location / {
+        rewrite ^(.*)$ https://$http_host$1 permanent;
+    }
+}

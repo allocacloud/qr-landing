@@ -1,0 +1,113 @@
+- name: Deploy (host)
+  hosts: "{{ deploy_group }}"
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: test
+    debug:
+      msg: "test"
+    tags:
+      - always
+
+  - include_tasks: include/registry_login.yml
+    tags:
+      - always
+
+  - name: "stop_api : Stop containers"
+    docker_container:
+      name: "{{ project_name }}-{{ namespace }}"
+      state: absent
+    tags:
+      - deploy
+      - absent
+
+  - name: "stop_redis : Stop containers"
+    docker_container:
+      name: "{{ project_name }}-{{ namespace }}-redis"
+      state: absent
+    tags:
+      - deploy
+      - absent
+
+  - name: "sets_balancer : Delete nginx config"
+    file:
+      state: absent
+      path: "{{ item_path }}"
+    loop:
+    - "{{ nginx_home }}/conf.d/100-{{ project_hostname }}.conf"
+    loop_control:
+      loop_var: item_path
+    tags:
+      - absent
+
+  - name: restart nginx
+    include: include/restart_nginx.yml
+    tags:
+      - absent
+
+  - name: Run redis container
+    docker_container:
+      name: "{{ project_name }}-{{ namespace }}-redis"
+      image: "{{ project_redis_image }}"
+      pull: yes
+      restart_policy: always
+      ports:
+      - "{{ project_host }}:{{ project_redis_master_port }}:6379"
+      # volumes:
+      # - "{{ project_home }}/redis:/data"
+      sysctls:
+        net.core.somaxconn: 65535
+    tags:
+      - deploy
+
+  - name: "start_api : Set variable defaults"
+    set_fact:
+      _project_api_ports:
+      - "{{ project_host }}:{{ project_api_port|string }}:{{ project_api_expose|string }}"
+    tags:
+      - deploy
+
+  - name: "start_api : Run container"
+    docker_container:
+      name: "{{ project_name }}-{{ namespace }}"
+      image: "{{ project_api_image }}"
+      pull: yes
+      restart_policy: always
+      env: "{{ project_api_env | default({}) }}"
+      ports: "{{ _project_api_ports + (_project_api_debug_ports | default([])) }}"
+      volumes: "{{ project_api_volumes | default([]) }}"
+    tags:
+      - deploy
+
+  - name: "start_api : Wait for {{ inventory_hostname }}:{{ project_api_port|string }} service to boot"
+    uri:
+      url: "http://{{ project_host }}:{{ project_api_port|string }}{{ project_api_ping }}"
+      status_code: 200
+    register: result
+    until: result is succeeded
+    retries: 20
+    delay: 5
+    tags:
+      - deploy
+
+  - name: "sets_balancer : Copy nginx config"
+    template:
+      src: "templates/nginx-balancer.conf.j2"
+      dest: "{{ nginx_home }}/conf.d/100-{{ project_hostname }}.conf"
+      mode: "0666"
+    tags:
+      - deploy
+      - balancer
+
+  - name: restart nginx
+    include: include/restart_nginx.yml
+    tags:
+      - deploy
+      - balancer
+
+  - name: domain name debug
+    debug:
+      msg: "domain name is - https://{{ project_hostname }}"
+    tags:
+      - deploy
+      - balancer

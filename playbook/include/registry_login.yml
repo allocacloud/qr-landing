@@ -1,0 +1,9 @@
+---
+- name: Log into private registry and force re-authorization
+  docker_login:
+    registry: "{{ registry_hostname }}"
+    username: "{{ registry_username }}"
+    password: "{{ registry_password }}"
+    reauthorize: yes
+  tags:
+    - always

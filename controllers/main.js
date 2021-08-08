@@ -94,28 +94,14 @@ module.exports = (app) => {
 
                     switch (req.body.type) {
                         case "email":
-                            let testAccount = await nodemailer.createTestAccount();
+                            let transporter = nodemailer.createTransport(app.config.smtp)
 
-                            let transporter = nodemailer.createTransport({
-                                host: "smtp.ethereal.email",
-                                port: 587,
-                                secure: false,
-                                auth: {
-                                    user: testAccount.user,
-                                    pass: testAccount.pass,
-                                },
-                            });
-
-                            //let transporter = nodemailer.createTransport(app.config.smtp)
-
-                            let info = await transporter.sendMail({
+                            await transporter.sendMail({
                                 from: '"Alloca" <foo@example.com>',
                                 to: req.body.value,
                                 subject: "Your code",
                                 text: code.toString()
-                            });
-
-                            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                            })
 
                             return res.send({success: true})
                         case "phone":

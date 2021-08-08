@@ -20,6 +20,17 @@ module.exports = (app) => {
         host: "http://dev1.alloca.cloud/ords/alloca/alloca_api/"
     }
 
+    config.smtp = {
+        pool: true,
+        host: "smtp.example.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: "username",
+            pass: "password",
+        },
+    }
+
     config.bsgKey = 'test_HdcVrJUtXLwDMeo1NfYt'
 
     return config

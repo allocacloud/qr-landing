@@ -6,8 +6,6 @@ module.exports = (app) => {
     const cache = app.lib('cache', 'code-')
 
     this.index = async (req, res) => {
-        req.params.id = 1
-
         const response = await app.api.getServices({
             company_id: req.params.id,
             lng: res.locals.lang
@@ -52,7 +50,7 @@ module.exports = (app) => {
                         files: files
                     })
 
-                    return res.view('thankyou.html')
+                    return res.redirect('/' + res.locals.lang + '/thankyou')
                 } else {
                     return res.send({success: false})
                 }
@@ -69,71 +67,79 @@ module.exports = (app) => {
                 files: files
             })
 
-            return res.view('thankyou.html')
+            return res.redirect('/' + res.locals.lang + '/thankyou')
         }
+    }
+
+    this.thankyou = (req, res) => {
+        return res.view('thankyou.html')
     }
 
     const genCode = () => Math.floor(100000 + Math.random() * 900000)
 
     this.sendConfirm = async (req, res) => {
-        if (req.body.code) {
-            return cache.get(req.body.value, function (err, data) {
+        return cache.get(req.body.value, async (err, data) => {
+            if (req.body.code) {
                 if (data && data.code == req.body.code) {
                     cache.set(req.body.value, {allow:true}, null, 60*60)
 
                     return res.send({success: true})
                 }
                 return res.send({success: false})
-            })
-        } else {
-            const code = genCode()
+            } else {
+                if (!data) {
+                    const code = genCode()
 
-            cache.set(req.body.value, {code}, null, 60)
+                    cache.set(req.body.value, {code}, null, 60)
 
-            switch (req.body.type) {
-                case "email":
-                    let testAccount = await nodemailer.createTestAccount();
+                    switch (req.body.type) {
+                        case "email":
+                            let testAccount = await nodemailer.createTestAccount();
 
-                    let transporter = nodemailer.createTransport({
-                        host: "smtp.ethereal.email",
-                        port: 587,
-                        secure: false,
-                        auth: {
-                            user: testAccount.user,
-                            pass: testAccount.pass,
-                        },
-                    });
+                            let transporter = nodemailer.createTransport({
+                                host: "smtp.ethereal.email",
+                                port: 587,
+                                secure: false,
+                                auth: {
+                                    user: testAccount.user,
+                                    pass: testAccount.pass,
+                                },
+                            });
 
-                    let info = await transporter.sendMail({
-                        from: '"Fred Foo 👻" <foo@example.com>',
-                        to: req.body.value,
-                        subject: "Your code",
-                        text: code.toString()
-                    });
+                            //let transporter = nodemailer.createTransport(app.config.smtp)
 
-                    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                            let info = await transporter.sendMail({
+                                from: '"Alloca" <foo@example.com>',
+                                to: req.body.value,
+                                subject: "Your code",
+                                text: code.toString()
+                            });
 
-                    return res.send({success: true})
-                case "phone":
-                    bsg.createSMS(
-                        {
-                            destination: "phone",
-                            originator: "testsms",
-                            body: code.toString(),
-                            msisdn: parseInt(req.body.value).toString(),
-                            reference: new Date().getTime(),
-                            validity: "1",
-                            tariff: "9"
-                        }
-                    ).then(
-                        SMS => console.log( "SMS created:", SMS ),
-                        error => console.log( "SMS creation failed:", error )
-                    )
-                    return res.send({success: true})
+                            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+                            return res.send({success: true})
+                        case "phone":
+                            bsg.createSMS(
+                                {
+                                    destination: "phone",
+                                    originator: "testsms",
+                                    body: code.toString(),
+                                    msisdn: parseInt(req.body.value).toString(),
+                                    reference: new Date().getTime(),
+                                    validity: "1",
+                                    tariff: "9"
+                                }
+                            ).then(
+                                SMS => console.log( "SMS created:", SMS ),
+                                error => console.log( "SMS creation failed:", error )
+                            )
+                            return res.send({success: true})
+                    }
+                }
             }
-        }
 
-        return res.send({success: false})
+            return res.send({success: false})
+        })
     }
 
     return this

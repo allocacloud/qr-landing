@@ -12,7 +12,7 @@ module.exports = (app) => {
         })
 
         if (!response.response || !response.response.services) {
-            return res.send(new httpErrors().NotFound)
+            return res.send(new httpErrors.NotFound())
         }
 
         res.locals.services = JSON.stringify(response.response.services)

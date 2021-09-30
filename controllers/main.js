@@ -108,7 +108,7 @@ module.exports = (app) => {
                             bsg.createSMS(
                                 {
                                     destination: "phone",
-                                    originator: "testsms",
+                                    originator: "Alloca",
                                     body: code.toString(),
                                     msisdn: parseInt(req.body.value).toString(),
                                     reference: new Date().getTime(),

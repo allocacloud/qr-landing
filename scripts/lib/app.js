@@ -38,20 +38,22 @@ var App = function (tree) {
             self.overlay.classList.remove('hidden');
         });
 
-        document.querySelector('form').addEventListener('submit', self.submit);
+        document.querySelector('form').addEventListener('submit', function (e) {
+            return self.submit(e);
+        });
 
         document.querySelector('button.send-confirm').addEventListener('click', function (e) {
             e.preventDefault();
 
             var data = readForm(document.querySelector('form'));
 
-            if (!data.phone && !data.email) {
+            if (data.phone && !/^\+38\d{10}$/.test(data.phone)) {
                 e.preventDefault();
-                document.querySelector('input[name="phone"]').setCustomValidity(app.enter_phone_or_email);
+                document.querySelector('input[name="phone"]').setCustomValidity(app.wrong_email);
                 document.querySelector('input[name="phone"]').reportValidity();
                 return false;
             } else {
-                document.querySelector('input[name="phone"]').setCustomValidity("");
+                document.querySelector('input[name="phone"]').setCustomValidity("")
             }
 
             if (data.email && !/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(data.email)) {
@@ -244,7 +246,7 @@ var App = function (tree) {
     }
 
     this.submit = function (e) {
-        var data = readForm(this);
+        var data = readForm(document.querySelector('form'));
 
         if (!document.querySelector('input[name="name"]').getAttribute('required')) {
             if (!data.description) {
@@ -252,12 +254,6 @@ var App = function (tree) {
                 document.querySelector('textarea').reportValidity();
                 return false;
             }
-        }
-
-        var files = self.uploader.getFiles();
-        if (files) {
-            e.preventDefault();
-            document.querySelector('input[name="transfer"]').value = JSON.stringify(files);
         }
 
         return true;

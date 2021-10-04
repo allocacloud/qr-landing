@@ -26,17 +26,19 @@ module.exports = (app) => {
         if (req.body.transfer) {
             req.body.transfer = JSON.parse(req.body.transfer)
 
-            req.body.transfer.forEach(file => {
+            for (let i in req.body.transfer) {
+                let file = req.body.transfer[i]
+
                 files.push({
                     filename: file.filename,
                     title: file.filename.substr(0,-4),
                     content_type: file.type,
                     file_content: file.content
                 })
-            })
+            }
         }
 
-        if (req.body.phone || req.body.email) {
+        if ((req.body.phone && req.body.phone != '+380') || req.body.email) {
             cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
                 if (data && data.allow) {
                     app.api.createTask({

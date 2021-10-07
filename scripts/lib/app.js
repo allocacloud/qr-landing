@@ -47,7 +47,7 @@ var App = function (tree) {
 
             var data = readForm(document.querySelector('form'));
 
-            if (data.phone && !/^38\d{10}$/.test(parseInt(data.phone).toString())) {
+            if (data.phone && !/^38\d{10}$/.test(data.phone.match(/\d/g).join(''))) {
                 e.preventDefault();
                 document.querySelector('input[name="phone"]').setCustomValidity(app.wrong_email);
                 document.querySelector('input[name="phone"]').reportValidity();

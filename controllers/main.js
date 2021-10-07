@@ -38,7 +38,9 @@ module.exports = (app) => {
             }
         }
 
-        if ((req.body.phone && req.body.phone != '+380') || req.body.email) {
+        req.body.phone = req.body.phone.match(/\d/g).join('')
+
+        if ((req.body.phone && req.body.phone != '380') || req.body.email) {
             cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
                 if (data && data.allow) {
                     app.api.createTask({

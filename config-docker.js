@@ -17,7 +17,7 @@ module.exports = (app) => {
     }
 
     config.api = {
-        host: "https://dev1.alloca.cloud/ords/alloca/alloca_api/"
+        host: process.env.APPAPIHOST
     }
 
     config.smtp = {

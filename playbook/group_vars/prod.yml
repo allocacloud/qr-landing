@@ -1,21 +1,21 @@
 ---
 ### common
 
-namespace: dev
+namespace: prod
 project_hostname: "{{ project_name }}-{{ namespace }}.alloca.cloud"
 
 ### redis
 
 project_redis_master_address: "{{ project_host }}"
-project_redis_master_port: "16379"
+project_redis_master_port: "26379"
 
 ### api
 
-project_api_port: 18080
+project_api_port: 28080
 project_api_env:
   NODE_ENV: production
   APPPORT: "{{ project_api_expose|string }}"
   APPHOST: "0.0.0.0"
   APPREDISHOST: "{{ project_redis_master_address }}"
   APPREDISPORT: "{{ project_redis_master_port }}"
-  APPAPIHOST: "https://dev1.alloca.cloud/ords/alloca/alloca_api/"
+  APPAPIHOST: "https://prod1.alloca.cloud/ords/alloca/alloca_api/"

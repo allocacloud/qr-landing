@@ -109,12 +109,14 @@ module.exports = (app) => {
 
                             return res.send({success: true})
                         case "phone":
+                            req.body.value = req.body.value.match(/\d/g).join('')
+                            console.log(req.body.value)
                             bsg.createSMS(
                                 {
                                     destination: "phone",
                                     originator: "Alloca",
                                     body: code.toString(),
-                                    msisdn: parseInt(req.body.value).toString(),
+                                    msisdn: req.body.value,
                                     reference: new Date().getTime(),
                                     validity: "1",
                                     tariff: "9"

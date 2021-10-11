@@ -110,7 +110,6 @@ module.exports = (app) => {
                             return res.send({success: true})
                         case "phone":
                             req.body.value = req.body.value.match(/\d/g).join('')
-                            console.log(req.body.value)
                             bsg.createSMS(
                                 {
                                     destination: "phone",

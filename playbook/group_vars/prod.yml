@@ -18,4 +18,4 @@ project_api_env:
   APPHOST: "0.0.0.0"
   APPREDISHOST: "{{ project_redis_master_address }}"
   APPREDISPORT: "{{ project_redis_master_port }}"
-  APPAPIHOST: "https://dev1.alloca.cloud/ords/alloca/alloca_api/"
+  APPAPIHOST: "https://app.alloca.cloud/ords/alloca/alloca_api/"

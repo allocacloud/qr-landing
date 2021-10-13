@@ -57,6 +57,7 @@ module.exports = (app) => {
                 break;
             case "reg":
                 if ((req.body.phone && req.body.phone != '380') || req.body.email) {
+                    console.log(req.body.email ? req.body.email : req.body.phone)
                     cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
                         if (data && data.allow) {
                             app.api.createTask({
@@ -92,6 +93,10 @@ module.exports = (app) => {
     const genCode = () => Math.floor(100000 + Math.random() * 900000)
 
     this.sendConfirm = async (req, res) => {
+        if (!/@/.test(req.body.value)) {
+            req.body.value = req.body.value.match(/\d/g).join('')
+        }
+
         return cache.get(req.body.value, async (err, data) => {
             if (req.body.code) {
                 if (data && data.code == req.body.code) {
@@ -104,7 +109,7 @@ module.exports = (app) => {
                 if (!data) {
                     const code = genCode()
                     console.log(code)
-                    
+
                     cache.set(req.body.value, {code}, null, 60)
 
                     switch (req.body.type) {
@@ -120,7 +125,6 @@ module.exports = (app) => {
 
                             return res.send({success: true})
                         case "phone":
-                            req.body.value = req.body.value.match(/\d/g).join('')
                             bsg.createSMS(
                                 {
                                     destination: "phone",

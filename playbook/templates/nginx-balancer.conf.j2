@@ -31,6 +31,8 @@ server {
     gzip_disable "MSIE [1-6].(?!.*SV1)";
     gzip_vary on;
 
+    client_max_body_size 12m;
+
     root /var/www/qr-landing-static-{{ project_tag }}/;
 
     location / {

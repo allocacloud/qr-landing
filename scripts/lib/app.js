@@ -47,7 +47,7 @@ var App = function (tree) {
 
             var data = readForm(document.querySelector('form'));
 
-            if (data.phone && !/^38\d{10}$/.test(data.phone.match(/\d/g).join(''))) {
+            if (data.phone && (data.phone != '+380' && !data.email) && !/^38\d{10}$/.test(data.phone.match(/\d/g).join(''))) {
                 e.preventDefault();
                 document.querySelector('input[name="phone"]').setCustomValidity(app.wrong_email);
                 document.querySelector('input[name="phone"]').reportValidity();
@@ -173,6 +173,7 @@ var App = function (tree) {
         document.getElementById('title').innerText = sel.service_name;
         self.title.innerText = container.dataset.title;
         container.querySelector('input[name="id"]').value = this.id;
+        document.querySelector('input[name="type"]').value = 'anon';
 
         document.querySelectorAll('.reg input').forEach(function (input) {
             input.removeAttribute('required');
@@ -197,6 +198,7 @@ var App = function (tree) {
     this.reg = function () {
         var container = content('reg');
         document.querySelector('.title span').innerText = container.dataset.title;
+        document.querySelector('input[name="type"]').value = 'reg';
 
         self.back.setAttribute('data-id', "create");
 
@@ -206,6 +208,8 @@ var App = function (tree) {
     }
 
     this.confirmation = function (data) {
+        self.sendConfirmation(data);
+
         var container = content('confirm');
         document.querySelector('.title span').innerText = container.dataset.title.replace('%type%', app[data.type + '1']);
 
@@ -214,8 +218,6 @@ var App = function (tree) {
         
         var p = container.querySelector('p[data-orig]');
         p.innerHTML = p.dataset.orig.replace('%placeholder%', data.value).replace('%type%', app[data.type + '2']);
-
-        self.sendConfirmation(data);
     }
 
     this.sendConfirmation = function (data) {
@@ -241,7 +243,12 @@ var App = function (tree) {
         ajax({
             url: '/confirmation',
             method: 'POST',
-            data: self.data
+            data: self.data,
+            success: function (data) {
+                if (data.allow) {
+                    document.querySelector('form').submit();
+                }
+            }
         });
     }
 

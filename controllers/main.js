@@ -40,38 +40,48 @@ module.exports = (app) => {
 
         req.body.phone = req.body.phone.match(/\d/g).join('')
 
-        if ((req.body.phone && req.body.phone != '380') || req.body.email) {
-            cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
-                if (data && data.allow) {
-                    app.api.createTask({
-                        company_id: parseInt(req.params.id),
-                        service_id: parseInt(req.body.id),
-                        user_name: req.body.name,
-                        user_login: req.body.phone || req.body.email ? (req.body.phone ? parseInt(req.body.phone) : req.body.email) : '',
-                        description: req.body.description,
-                        anonymous: false,
-                        lng: res.locals.lang,
-                        files: files
+        switch (req.body.type) {
+            case "anon":
+                app.api.createTask({
+                    company_id: parseInt(req.params.id),
+                    service_id: parseInt(req.body.id),
+                    user_name: "",
+                    user_login: '',
+                    description: req.body.description,
+                    anonymous: true,
+                    lng: res.locals.lang,
+                    files: files
+                })
+    
+                return res.redirect('/' + res.locals.lang + '/thankyou')
+                break;
+            case "reg":
+                if ((req.body.phone && req.body.phone != '380') || req.body.email) {
+                    cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
+                        if (data && data.allow) {
+                            app.api.createTask({
+                                company_id: parseInt(req.params.id),
+                                service_id: parseInt(req.body.id),
+                                user_name: req.body.name,
+                                user_login: req.body.phone || req.body.email ? (req.body.phone ? parseInt(req.body.phone) : req.body.email) : '',
+                                description: req.body.description,
+                                anonymous: false,
+                                lng: res.locals.lang,
+                                files: files
+                            })
+        
+                            return res.redirect('/' + res.locals.lang + '/thankyou')
+                        } else {
+                            return res.send({success: false, reason: 'no session'})
+                        }
                     })
-
-                    return res.redirect('/' + res.locals.lang + '/thankyou')
                 } else {
-                    return res.send({success: false})
+                    return res.send({success: false, reason: 'wrong email or phone'})
                 }
-            })
-        } else {
-            app.api.createTask({
-                company_id: parseInt(req.params.id),
-                service_id: parseInt(req.body.id),
-                user_name: "",
-                user_login: '',
-                description: req.body.description,
-                anonymous: true,
-                lng: res.locals.lang,
-                files: files
-            })
-
-            return res.redirect('/' + res.locals.lang + '/thankyou')
+                break;
+            default:
+                return res.send();
+                break;
         }
     }
 
@@ -93,7 +103,8 @@ module.exports = (app) => {
             } else {
                 if (!data) {
                     const code = genCode()
-
+                    console.log(code)
+                    
                     cache.set(req.body.value, {code}, null, 60)
 
                     switch (req.body.type) {
@@ -126,10 +137,12 @@ module.exports = (app) => {
                             )
                             return res.send({success: true})
                     }
+                } else {
+                    console.log(data)
                 }
             }
 
-            return res.send({success: false})
+            return res.send({success: false, ...data})
         })
     }
 

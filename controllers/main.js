@@ -38,7 +38,9 @@ module.exports = (app) => {
             }
         }
 
-        req.body.phone = req.body.phone.match(/\d/g).join('')
+        if (req.body.phone && req.body.phone != '+380') {
+            req.body.phone = req.body.phone.match(/\d/g).join('')
+        }
 
         switch (req.body.type) {
             case "anon":
@@ -57,7 +59,6 @@ module.exports = (app) => {
                 break;
             case "reg":
                 if ((req.body.phone && req.body.phone != '380') || req.body.email) {
-                    console.log(req.body.email ? req.body.email : req.body.phone)
                     cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
                         if (data && data.allow) {
                             app.api.createTask({

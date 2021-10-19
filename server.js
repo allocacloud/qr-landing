@@ -1,5 +1,6 @@
 const server = require('./app')({
-    ignoreTrailingSlash: true
+    ignoreTrailingSlash: true,
+    bodyLimit: 14000000
 })
 
 server.listen(server.config.port, server.config.host, (err) => {

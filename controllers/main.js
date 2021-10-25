@@ -101,7 +101,7 @@ module.exports = (app) => {
         return cache.get(req.body.value, async (err, data) => {
             if (req.body.code) {
                 if (data && data.code == req.body.code) {
-                    cache.set(req.body.value, {allow:true}, null, 60*60)
+                    cache.set(req.body.value, {allow:true}, null, 10*60)
 
                     return res.send({success: true})
                 }
@@ -111,7 +111,7 @@ module.exports = (app) => {
                     const code = genCode()
                     console.log(code)
 
-                    cache.set(req.body.value, {code}, null, 10)
+                    cache.set(req.body.value, {code}, null, 60)
 
                     switch (req.body.type) {
                         case "email":

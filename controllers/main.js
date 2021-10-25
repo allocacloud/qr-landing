@@ -111,7 +111,7 @@ module.exports = (app) => {
                     const code = genCode()
                     console.log(code)
 
-                    cache.set(req.body.value, {code}, null, 60)
+                    cache.set(req.body.value, {code}, null, 10)
 
                     switch (req.body.type) {
                         case "email":

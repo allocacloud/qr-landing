@@ -33,7 +33,7 @@ module.exports = (app) => {
                     filename: file.filename,
                     title: file.filename.substr(0,-4),
                     content_type: file.type,
-                    file_content: file.content
+                    file_content: file.content.replace(/data:image(.+?)base64,/, '')
                 })
             }
         }

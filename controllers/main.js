@@ -38,7 +38,7 @@ module.exports = (app) => {
             }
         }
 
-        if (req.body.phone && req.body.phone != '+380') {
+        if (req.body.phone) {
             req.body.phone = req.body.phone.match(/\d/g).join('')
         }
 
@@ -65,7 +65,7 @@ module.exports = (app) => {
                                 company_id: parseInt(req.params.id),
                                 service_id: parseInt(req.body.id),
                                 user_name: req.body.name,
-                                user_login: req.body.phone || req.body.email ? (req.body.phone ? parseInt(req.body.phone) : req.body.email) : '',
+                                user_login: req.body.phone || req.body.email ? (req.body.phone && req.body.phone != '380' ? parseInt(req.body.phone) : req.body.email) : '',
                                 description: req.body.description,
                                 anonymous: false,
                                 lng: res.locals.lang,

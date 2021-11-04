@@ -7,6 +7,7 @@ module.exports = (app) => {
 
     this.index = async (req, res) => {
         const response = await app.api.getServices({
+            bp_id: req.params.bp_id,
             company_id: req.params.id,
             lng: res.locals.lang
         })
@@ -45,6 +46,7 @@ module.exports = (app) => {
         switch (req.body.type) {
             case "anon":
                 app.api.createTask({
+                    bp_id: pareseInt(req.params.bp_id),
                     company_id: parseInt(req.params.id),
                     service_id: parseInt(req.body.id),
                     user_name: "",
@@ -62,6 +64,7 @@ module.exports = (app) => {
                     cache.get(req.body.email ? req.body.email : req.body.phone, function (err, data) {
                         if (data && data.allow) {
                             app.api.createTask({
+                                bp_id: parseInt(req.params.bp_id),
                                 company_id: parseInt(req.params.id),
                                 service_id: parseInt(req.body.id),
                                 user_name: req.body.name,

@@ -19,7 +19,7 @@ project_redis_migration: no
 project_api_tag: "{{ project_tag }}"
 project_api_container: alloca/qr-landing
 project_api_image: "{{ registry_hostname }}/{{ project_api_container }}:{{ project_api_tag }}"
-project_api_ping: /uk/company/1
+project_api_ping: /uk/company/1001/1002
 project_api_expose: 8080
 project_api_user: root
 project_api_group: root

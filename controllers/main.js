@@ -46,7 +46,7 @@ module.exports = (app) => {
         switch (req.body.type) {
             case "anon":
                 app.api.createTask({
-                    bp_id: pareseInt(req.params.bpid),
+                    bp_id: parseInt(req.params.bpid),
                     company_id: parseInt(req.params.id),
                     service_id: parseInt(req.body.id),
                     user_name: "",

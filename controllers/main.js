@@ -57,7 +57,7 @@ module.exports = (app) => {
                     files: files
                 })
     
-                return res.redirect('/' + res.locals.lang + '/thankyou')
+                return res.redirect(`/${res.locals.lang}/${req.params.bpid}/${req.params.id}/thankyou`)
                 break;
             case "reg":
                 if ((req.body.phone && req.body.phone != '380') || req.body.email) {

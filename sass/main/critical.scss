@@ -1,6 +1,7 @@
 @import '../assets/normalize.scss';
 @import '../components/header.scss';
 @import '../components/tree.scss';
+@import '../assets/colors.scss';
 
 body {
     background-color: var(--brand-color, #09c);
@@ -22,7 +23,7 @@ html, body, input, textarea {
 
 svg {
     .line {
-        fill: var(--brand-color, #09c);
+        fill: var(--icon-color, #09c);
     }
 }
 

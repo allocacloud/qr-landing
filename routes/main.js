@@ -3,7 +3,7 @@ module.exports = (app, opts, done) => {
 
     app.get('/company/:bpid/:id', main.index)
     app.post('/company/:bpid/:id', main.send)
-    app.get('/thankyou', main.thankyou)
+    app.get('/:bpid/:id/thankyou', main.thankyou)
 
     done()
 }

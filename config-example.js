@@ -33,5 +33,7 @@ module.exports = (app) => {
 
     config.bsgKey = 'test_HdcVrJUtXLwDMeo1NfYt'
 
+    config.logos = require('./logos.js')
+
     return config
 }

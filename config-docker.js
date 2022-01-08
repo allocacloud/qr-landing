@@ -33,5 +33,7 @@ module.exports = (app) => {
 
     config.bsgKey = 'live_WO3EpTYxPgxgBMS6hfP8'
 
+    config.logos = require('./logos.js')
+
     return config
 }
